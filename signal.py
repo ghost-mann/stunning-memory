@@ -110,5 +110,45 @@ def add_technical_indicators(data):
         return signals
 
 
+def plot_signals(data, signals, last_days=60):
+
+    # plot the price chart with buy/sell signals
+    plt.figure(figsize=(12, 8))
+
+    # get the last N days of data
+    data = data.iloc[-last_days:]
+    signals = signals.iloc[-last_days:]
+
+    # plot price
+    plt.plot(data.index, data['CLose'], label='XAUUSD Price', color='blue')
+
+    # plot moving average
+    plt.plot(data.index, data['SMA20'], label='SMA 20', color='orange', alpha=0.7)
+    plt.plot(data.index, data['SMA50'] , label='SMA 50', color='green', alpha=0.7)
+
+    # plot bollinger bands
+    plt.plot(data.index, data['BB_Upper'], '--', color='gray', alpha=0.6)
+    plt.plot(data.index, data['BB_Lower'], '--', color='gray', alpha=0.6)
+
+    # plot buy signals
+    buy_signals = signals[signals['signal'] == 1]
+    plt.scatter(buy_signals.index, buy_signals['price'],
+                color='green', s=100, marker='^', label='Buy Signal')
+
+    # Plot sell signals
+    sell_signals = signals[signals['signal'] == -1]
+    plt.scatter(sell_signals.index, sell_signals['price'],
+                color='red', s=100, marker='v', label='Sell Signal')
+
+    plt.title('XAU/USD Price with Trading Signals')
+    plt.xlabel('Date')
+    plt.ylabel('Price (USD)')
+    plt.legend()
+    plt.grid(True, alpha=0.3)
+
+    # Save the plot
+    os.makedirs("plots", exist_ok=True)
+    plt.savefig(f"plots/xauusd_signals_{datetime.now().strftime('%Y%m%d')}.png")
+    plt.close()
 
 
