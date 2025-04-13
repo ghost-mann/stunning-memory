@@ -57,7 +57,7 @@ def send_email_notification(config, subject, message):
         logging.info(f"Email notification sent: {subject}")
         return True
     except Exception as e:
-        logging.error(f"Failed to send email: {str{e} }")
+        logging.error(f"Failed to send email: {str(e) }")
         return False
 
 
@@ -67,7 +67,7 @@ def get_real_time_xauusd():
         data = yf.download("GC=F", period="2d", interval="1m")
         return data
     except Exception as e:
-        logging.error(f"Failed to fetch data: {str{e} }")
+        logging.error(f"Failed to fetch data: {str(e) }")
         return None
 
 
@@ -119,6 +119,7 @@ def check_for_signals(df):
     signal_strength = 0
 
     # Check Moving Average Crossover
+    # Fix by using .iloc for element-wise comparison
     if df['SMA20'].iloc[-1] > df['SMA50'].iloc[-1] and df['SMA20'].iloc[-2] <= df['SMA50'].iloc[-2]:
         signals.append("SMA20 crossed above SMA50 (BULLISH)")
         signal_strength += 1

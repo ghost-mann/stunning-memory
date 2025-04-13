@@ -1,9 +1,9 @@
 import yfinance as yf
 import pandas as pd
-from datetime import datetime. timedelta
+from datetime import timedelta, datetime
 import os
 
-def fetch_xauusd_data(period="1y", interval="1d")
+def fetch_xauusd_data(period="1y", interval="1d"):
     """
     Fetch XAU/USD data using Yahoo Finance.
 
