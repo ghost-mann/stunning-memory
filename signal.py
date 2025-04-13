@@ -151,4 +151,50 @@ def plot_signals(data, signals, last_days=60):
     plt.savefig(f"plots/xauusd_signals_{datetime.now().strftime('%Y%m%d')}.png")
     plt.close()
 
+def get_latest_signals(signals, days=5):
+    latest = signals.iloc[-days:].copy()
+
+    # signal description
+    signal_map = {1:"BUY", -1:"SELL", 0:"NEUTRAL"}
+    latest['action'] = latest['signal'].map(signal_map)
+
+    return latest[['price', 'signal', 'signal_strength', 'action']]
+
+if __name__ == "__main__":
+    # load recent data file
+    data_dir = "data"
+    if not os.path.exists(data_dir):
+        print("Data direcotry not found.Please run the data collection script first.")
+        exit(1)
+
+    data_files = [f for f in os.listdir(data_dir) if f.startswith("xauusd_data_")]
+    if not data_files:
+        print("No data files found.Please run the data collection script first.")
+        exit(1)
+
+    latest_file = sorted(data_files)[-1]
+    filepath = os.path.join(data_dir, latest_file)
+
+    # load and process data
+    xauusd_data = load_data(filepath)
+    print(f"Loaded data from {filepath}")
+
+    # add technical indicators
+    data_with_indicators = add_technical_indicators(xauusd_data)
+
+    # plot signals
+    plot_signals(data_with_indicators, signals)
+
+    # display latest signals
+    latest_signals = get_latest_signals(signals)
+    print("\nLatest XAU/USD Trading Signals:")
+    print(latest_signals)
+
+    # save signals to csv
+    os.makedirs("plots", exist_ok=True)
+    signals_file = f"signals/xauusd_signals_{datetime.now().strftime('%Y%m%d')}.csv"
+    signals.to_csv(signals_file)
+    print(f"\nDetailed signals saved to {signals_file}")
+
+
 
