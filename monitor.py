@@ -57,3 +57,12 @@ def send_email_notification(config, subject, message):
     except Exception as e:
         logging.error(f"Failed to send email: {str{e}}")
         return False
+
+def get_real_time_xauusd():
+    # get the latest XAU/USD price data
+    try:
+        data = yf.download("GC=F", period="2d", interval="1m")
+        return data
+    except Exception as e:
+        logging.error(f"Failed to fetch data: {str{e}}")
+        return None
